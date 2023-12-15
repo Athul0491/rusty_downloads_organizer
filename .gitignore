@@ -1,0 +1,12 @@
+/.vscode
+# Generated files
+/target/debug/.fingerprint
+/target/debug/build
+/target/debug/deps
+/target/debug/examples
+/target/debug/incremental
+/target/debug/.cargo-lock
+/target/.rustc_info.json
+/target/debug/downloads_organiser_exp.d
+/target/debug/downloads_organiser_exp.pdb
+/target/CACHEDIR.TAG
