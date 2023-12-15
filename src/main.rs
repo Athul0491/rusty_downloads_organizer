@@ -38,6 +38,7 @@ fn organise_files(source: &str) -> io::Result<()> {
     let dest_dir_video: &str = "D:\\Downloads\\Video";
     let dest_dir_documents: &str = "D:\\Downloads\\Documents";
     let dest_dir_text_documents: &str = "D:\\Downloads\\Text_Documents";
+    let dest_dir_html_docs: &str = "D:\\Downloads\\HTML_Documents";
 
     let image_extensions: [&str;37] = ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "webp", "tiff",
                     "tif", "psd", "raw", "arw", "cr2", "nrw", "k25", "bmp", "dib", "heif", "heic",
@@ -48,6 +49,7 @@ fn organise_files(source: &str) -> io::Result<()> {
                     ".wmv", ".mov", ".qt", ".flv", ".swf", ".avchd"];
     let document_extensions: [&str;8] = [".doc", ".docx", ".odt", ".pdf", ".xls", ".xlsx", ".ppt", ".pptx"];
     let text_document_extensions: [&str;6] = [".txt", ".log", ".json", ".md", ".csv", ".xml"];
+    let html_document_extensions: [&str; 2] = [".html", ".htm"];
 
     // Use read_dir to get an iterator of DirEntry objects
     let entries = fs::read_dir(source)?;
@@ -84,6 +86,12 @@ fn organise_files(source: &str) -> io::Result<()> {
                 }
                 if text_document_extensions.contains(&extension.to_str().unwrap()) {
                     let unique_dest: String = make_unique(dest_dir_text_documents, entry.file_name().to_str().unwrap());
+                    let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
+                    fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
+                    println!("Moved {} to {}", entry.path().display(), destination_path.display());
+                }
+                if html_document_extensions.contains(&extension.to_str().unwrap()) {
+                    let unique_dest: String = make_unique(dest_dir_html_docs, entry.file_name().to_str().unwrap());
                     let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
                     fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
                     println!("Moved {} to {}", entry.path().display(), destination_path.display());
