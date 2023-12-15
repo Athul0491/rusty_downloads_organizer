@@ -34,10 +34,13 @@ fn make_unique(dest: &str, name: &str) -> String {
 
 fn organise_files(source: &str) -> io::Result<()> {
     let dest_dir_image: &str = "D:\\Downloads\\Image";
+    let dest_dir_audio: &str = "D:\\Downloads\\Audio";
+
     let image_extensions: [&str;37] = ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "webp", "tiff",
                     "tif", "psd", "raw", "arw", "cr2", "nrw", "k25", "bmp", "dib", "heif", "heic",
                     "ind", "indd", "indt", "jp2", "j2k", "jpf", "jpf", "jpx", "jpm", "mj2", "svg",
                     "svgz", "ai", "eps", "ico", "avif"];
+    let audio_extensions: [&str;6] = [".m4a", ".flac", "mp3", ".wav", ".wma", ".aac"];
 
     // Use read_dir to get an iterator of DirEntry objects
     let entries = fs::read_dir(source)?;
@@ -50,6 +53,12 @@ fn organise_files(source: &str) -> io::Result<()> {
             if let Some(extension) = entry.path().extension() {
                 if image_extensions.contains(&extension.to_str().unwrap()) {
                     let unique_dest: String = make_unique(dest_dir_image, entry.file_name().to_str().unwrap());
+                    let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
+                    fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
+                    println!("Moved {} to {}", entry.path().display(), destination_path.display());
+                }
+                if audio_extensions.contains(&extension.to_str().unwrap()) {
+                    let unique_dest: String = make_unique(dest_dir_audio, entry.file_name().to_str().unwrap());
                     let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
                     fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
                     println!("Moved {} to {}", entry.path().display(), destination_path.display());
