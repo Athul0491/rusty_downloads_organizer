@@ -39,9 +39,10 @@ fn organise_files(source: &str) -> io::Result<()> {
     let dest_dir_documents: &str = "D:\\Downloads\\Documents";
     let dest_dir_text_documents: &str = "D:\\Downloads\\Text_Documents";
     let dest_dir_html_docs: &str = "D:\\Downloads\\HTML_Documents";
-    let dest_dir_database = "D:\\Downloads\\Databases";
-    let dest_dir_ipynb = "D:\\Downloads\\Jupyter_Notebooks";
-    let dest_dir_compressed = "D:\\Downloads\\Compressed";
+    let dest_dir_database: &str = "D:\\Downloads\\Databases";
+    let dest_dir_ipynb: &str = "D:\\Downloads\\Jupyter_Notebooks";
+    let dest_dir_compressed: &str = "D:\\Downloads\\Compressed";
+    let dest_dir_executable: &str = "D:\\Downloads\\Executable";
 
     let image_extensions: [&str;37] = ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "webp", "tiff",
                     "tif", "psd", "raw", "arw", "cr2", "nrw", "k25", "bmp", "dib", "heif", "heic",
@@ -56,7 +57,7 @@ fn organise_files(source: &str) -> io::Result<()> {
     let database_extensions: [&str;1] = [".sql"];
     let ipynb_extensions: [&str;1] = [".ipynb"];
     let compressed_extensions: [&str;13] = [".7z", ".arj", ".deb", ".pkg", ".rar", ".rpm", ".tar.gz", ".z", ".zip", ".bz2", ".xz", ".tar", ".tgz"];
-
+    let executable_extensions: [&str;12] = [".apk", ".bat", ".bin", ".cgi", ".pl", ".com", ".exe", ".gadget", ".jar", ".msi", ".py", ".wsf"];
 
     // Use read_dir to get an iterator of DirEntry objects
     let entries = fs::read_dir(source)?;
@@ -117,6 +118,12 @@ fn organise_files(source: &str) -> io::Result<()> {
                 }
                 if compressed_extensions.contains(&extension.to_str().unwrap()) {
                     let unique_dest: String = make_unique(dest_dir_compressed, entry.file_name().to_str().unwrap());
+                    let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
+                    fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
+                    println!("Moved {} to {}", entry.path().display(), destination_path.display());
+                }
+                if executable_extensions.contains(&extension.to_str().unwrap()) {
+                    let unique_dest: String = make_unique(dest_dir_executable, entry.file_name().to_str().unwrap());
                     let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
                     fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
                     println!("Moved {} to {}", entry.path().display(), destination_path.display());
