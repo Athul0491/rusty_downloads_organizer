@@ -41,6 +41,7 @@ fn organise_files(source: &str) -> io::Result<()> {
     let dest_dir_html_docs: &str = "D:\\Downloads\\HTML_Documents";
     let dest_dir_database = "D:\\Downloads\\Databases";
     let dest_dir_ipynb = "D:\\Downloads\\Jupyter_Notebooks";
+    let dest_dir_compressed = "D:\\Downloads\\Compressed";
 
     let image_extensions: [&str;37] = ["jpg", "jpeg", "jpe", "jif", "jfif", "jfi", "png", "gif", "webp", "tiff",
                     "tif", "psd", "raw", "arw", "cr2", "nrw", "k25", "bmp", "dib", "heif", "heic",
@@ -54,6 +55,8 @@ fn organise_files(source: &str) -> io::Result<()> {
     let html_document_extensions: [&str;2] = [".html", ".htm"];
     let database_extensions: [&str;1] = [".sql"];
     let ipynb_extensions: [&str;1] = [".ipynb"];
+    let compressed_extensions: [&str;13] = [".7z", ".arj", ".deb", ".pkg", ".rar", ".rpm", ".tar.gz", ".z", ".zip", ".bz2", ".xz", ".tar", ".tgz"];
+
 
     // Use read_dir to get an iterator of DirEntry objects
     let entries = fs::read_dir(source)?;
@@ -108,6 +111,12 @@ fn organise_files(source: &str) -> io::Result<()> {
                 }
                 if ipynb_extensions.contains(&extension.to_str().unwrap()) {
                     let unique_dest: String = make_unique(dest_dir_ipynb, entry.file_name().to_str().unwrap());
+                    let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
+                    fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
+                    println!("Moved {} to {}", entry.path().display(), destination_path.display());
+                }
+                if compressed_extensions.contains(&extension.to_str().unwrap()) {
+                    let unique_dest: String = make_unique(dest_dir_compressed, entry.file_name().to_str().unwrap());
                     let destination_path: &Path = Path::new(&unique_dest);// Use Path::new and join for path manipulation
                     fs::rename(entry.path(), &destination_path)?; // Use rename for moving files
                     println!("Moved {} to {}", entry.path().display(), destination_path.display());
